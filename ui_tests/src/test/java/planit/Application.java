@@ -8,7 +8,11 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.remote.BrowserType;
 import planit.planitPages.loginPage.LoginPage;
 import planit.planitPages.releasesPage.ReleasesPage;
+import planit.planitPages.sideMenu.SideMenu;
 
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 public class Application {
@@ -17,14 +21,21 @@ public class Application {
 
     protected LoginPage loginPage;
     protected ReleasesPage releasesPage;
+    protected SideMenu sideMenu;
+
     private final String browser;
+    private Properties properties;
 
     public Application(String browser) {
         this.browser = browser;
+        properties = new Properties();
     }
 
-    public void init() {
+    public void init() throws IOException {
      //   System.setProperty("webdriver.chrome.driver", "C:\\Users\\ezudin\\Downloads\\chromedriver.exe");
+
+        String config = System.getProperty("config", "planitTests");
+        properties.load(new FileReader(String.format("src/test/resources/%s.properties", config)));
 
         switch (browser) {
             case BrowserType.CHROME:
@@ -39,23 +50,16 @@ public class Application {
         }
 
         wd.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+        wd.get(properties.getProperty("baseUrl"));
+        wd.findElement(By.linkText("Sign In")).click();
 
         releasesPage = new ReleasesPage(wd);
         loginPage = new LoginPage(wd);
-    }
-
-    public void goToLoginPage() {
-        wd.get("https://planit-tests.lab.nordigy.ru");
-        wd.findElement(By.linkText("Sign In")).click();
+        sideMenu = new SideMenu(wd);
     }
 
     public void stop() {
         wd.quit();
-    }
-
-    public void goToReleasesPage() {
-        wd.findElement(By.xpath("//div[@id='header']/div/div/div/mat-icon")).click();
-        wd.findElement(By.xpath("//div[@id='app']/mat-sidenav-container/mat-sidenav/div/app-sidenav/mat-nav-list/app-sidenav-block/app-sidenav-link/div/a/div/span")).click();
     }
 
     public ReleasesPage releasesPage() {
@@ -64,5 +68,9 @@ public class Application {
 
     public LoginPage loginPage() {
         return loginPage;
+    }
+
+    public SideMenu sideMenu() {
+        return sideMenu;
     }
 }

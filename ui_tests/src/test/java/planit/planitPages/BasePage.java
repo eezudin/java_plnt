@@ -3,10 +3,10 @@ package planit.planitPages;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
-public class PageBase {
+public class BasePage {
     public WebDriver wd;
 
-    public PageBase(WebDriver wd) {
+    public BasePage(WebDriver wd) {
         this.wd = wd;
     }
 

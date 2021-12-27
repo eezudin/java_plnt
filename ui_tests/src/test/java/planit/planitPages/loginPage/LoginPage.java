@@ -1,9 +1,9 @@
 package planit.planitPages.loginPage;
 
 import org.openqa.selenium.WebDriver;
-import planit.planitPages.PageBase;
+import planit.planitPages.BasePage;
 
-public class LoginPage extends PageBase {
+public class LoginPage extends BasePage {
 
     public LoginPage(WebDriver wd) {
         super(wd);
